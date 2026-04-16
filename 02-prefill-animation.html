@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>2. Pre-fill Animation — YouSquared</title>
+<link rel="stylesheet" href="shared/theme.css" />
+<link rel="stylesheet" href="shared/phone-frame.css" />
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  .hero {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; text-align: center;
+    padding: 60px 24px 40px;
+  }
+  .hero-icon {
+    font-size: 72px; margin-bottom: 24px;
+    animation: bounce 1.4s ease-in-out infinite;
+    display: inline-block;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(-8px) scale(1.05); }
+  }
+  .hero-title {
+    font-size: 24px; font-weight: 600; color: var(--primary-text);
+    margin-bottom: 8px;
+  }
+  .hero-subtitle {
+    font-size: 15px; color: var(--secondary-text);
+    max-width: 280px; line-height: 1.4;
+  }
+  .progress-bar {
+    width: 240px; height: 4px; background: var(--surface-darken);
+    border-radius: 2px; margin: 28px auto 0; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: var(--accent);
+    border-radius: 2px; animation: fill 2.2s linear forwards;
+  }
+  @keyframes fill { from { width: 0%; } to { width: 100%; } }
+
+  .field-ticker {
+    margin-top: 40px; min-height: 80px;
+    display: flex; flex-direction: column; gap: 8px;
+    padding: 0 24px;
+  }
+  .field-ticker-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    background: var(--surface-light);
+    border-radius: var(--r);
+    animation: slideIn 0.45s ease-out both;
+    opacity: 0;
+  }
+  .field-ticker-item .check {
+    color: var(--green-500); font-size: 16px; flex-shrink: 0;
+  }
+  .field-ticker-item .label {
+    font-size: 14px; color: var(--primary-text);
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-8px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="shared/components.js"></script>
+<script type="text/babel" src="shared/industries.js"></script>
+<script type="text/babel">
+const { useEffect, useState } = React;
+const { PhoneFrame, ScreenNav } = window.UI;
+
+const TICKER_ITEMS = [
+  'Work bio drafted',
+  'Products & Services filled',
+  'Pricing examples added',
+  'Hours of operation set',
+];
+
+function PrefillAnimation() {
+  const industryId = window.getIndustryFromUrl();
+  const industry = window.INDUSTRY_LOOKUP[industryId] || { displayName: 'your industry', icon: '✦' };
+
+  const [visibleItems, setVisibleItems] = useState(0);
+
+  useEffect(() => {
+    // Stagger ticker reveal
+    const timers = TICKER_ITEMS.map((_, i) =>
+      setTimeout(() => setVisibleItems(n => Math.max(n, i + 1)), 300 + i * 350)
+    );
+    // Auto-advance to review screen
+    const done = setTimeout(() => {
+      window.location.href = `03-company-info.html?industry=${industryId}`;
+    }, 2400);
+
+    return () => { timers.forEach(clearTimeout); clearTimeout(done); };
+  }, [industryId]);
+
+  return (
+    <PhoneFrame title="Setting up">
+      <div className="hero">
+        <span className="hero-icon">{industry.icon}</span>
+        <div className="hero-title">Setting up your {industry.name}</div>
+        <div className="hero-subtitle">
+          We're pre-filling your account with common {industry.name.toLowerCase()} settings.
+          You'll review and tweak next.
+        </div>
+        <div className="progress-bar"><div className="progress-fill" /></div>
+      </div>
+      <div className="field-ticker">
+        {TICKER_ITEMS.slice(0, visibleItems).map((label, i) => (
+          <div key={i} className="field-ticker-item">
+            <span className="check">✓</span>
+            <span className="label">{label}</span>
+          </div>
+        ))}
+      </div>
+    </PhoneFrame>
+  );
+}
+
+function App() {
+  const industryId = window.getIndustryFromUrl();
+  return (
+    <>
+      <ScreenNav current="02-prefill-animation.html" />
+      <PrefillAnimation />
+      <div style={{
+        textAlign: 'center', marginTop: 16, fontSize: 12,
+        color: 'var(--secondary-text)', maxWidth: 393,
+      }}>
+        Auto-advances to <code>03-company-info.html?industry={industryId}</code> in ~2.4s.<br/>
+        Try other industries: {Object.keys(window.INDUSTRY_PREFILLS)
+          .filter(k => !k.startsWith('_'))
+          .map((k, i, arr) => (
+            <span key={k}>
+              <a href={`02-prefill-animation.html?industry=${k}`}
+                 style={{ color: 'var(--accent)' }}>{k}</a>
+              {i < arr.length - 1 ? ' · ' : ''}
+            </span>
+          ))}
+      </div>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

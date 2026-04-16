@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>4. Change Industry — YouSquared</title>
+<link rel="stylesheet" href="shared/theme.css" />
+<link rel="stylesheet" href="shared/phone-frame.css" />
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" src="shared/components.js"></script>
+<script type="text/babel" src="shared/industries.js"></script>
+<script type="text/babel">
+const { useState } = React;
+const { PhoneFrame, ScreenNav, FieldRow, PickerRow, NavRow, AlertModal, Badge } = window.UI;
+
+/* ── Behaviour mirrors CompanyInfoViewModel.applyIndustryChange ──
+ * Changing industry:
+ *   - replaces preset fields with the new industry's defaults
+ *   - preserves any user-edited (committed) content
+ *   - resets "has seen" discovery flags so banners reappear
+ * The confirmation alert warns the user about the reset.
+ * ────────────────────────────────────────────────────────── */
+
+function ChangeIndustryScreen() {
+  const currentId = window.getIndustryFromUrl();
+  const current = window.INDUSTRY_LOOKUP[currentId] || { displayName: 'Other', icon: '✦' };
+
+  const [showAlert, setShowAlert] = useState(false);
+  const [pendingChoice, setPendingChoice] = useState(null);
+
+  // Pick a different industry for the demo; user can switch via query param
+  const targetsParams = new URLSearchParams(window.location.search);
+  const demoTargetId = targetsParams.get('target') || (
+    currentId === 'pharmacy' ? 'dental' : 'pharmacy'
+  );
+  const demoTarget = window.INDUSTRY_LOOKUP[demoTargetId];
+
+  const openPicker = () => setPendingChoice(demoTarget);
+  const confirmChange = () => {
+    window.location.href = `02-prefill-animation.html?industry=${pendingChoice.id}`;
+  };
+  const cancel = () => setPendingChoice(null);
+
+  return (
+    <PhoneFrame
+      title="Company Info"
+      onBack={() => window.location.href = `03-company-info.html?industry=${currentId}`}
+    >
+      <div className="section">
+        <div className="section-title">General</div>
+        <div className="section-card">
+          <FieldRow label="Industry — current" value={current.displayName} />
+          <PickerRow
+            label="Change Industry (demo)"
+            value={demoTarget.displayName}
+            icon={demoTarget.icon}
+            onClick={openPicker}
+          />
+        </div>
+        <div style={{
+          fontSize: 12, color: 'var(--tertiary-text)',
+          padding: '8px 4px 0', lineHeight: 1.4,
+        }}>
+          Tapping the row simulates picking <strong>{demoTarget.name}</strong> in the
+          industry picker. You can override the target with <code>?target=&lt;id&gt;</code>.
+        </div>
+      </div>
+
+      <div className="section">
+        <div className="section-title">What will happen</div>
+        <div className="section-card">
+          <div className="field-row">
+            <Badge type="preset" />
+            <div className="field-label" style={{ marginTop: 4 }}>Pre-filled fields</div>
+            <div className="field-value">
+              Replaced with {demoTarget.name} defaults.
+            </div>
+          </div>
+          <div className="field-row">
+            <Badge type="draft" />
+            <div className="field-label" style={{ marginTop: 4 }}>Example fields (unedited)</div>
+            <div className="field-value">
+              Replaced with {demoTarget.name} examples.
+            </div>
+          </div>
+          <div className="field-row">
+            <div className="field-label" style={{
+              color: 'var(--green-500)', fontWeight: 600,
+            }}>Your edits</div>
+            <div className="field-value">
+              Preserved — anything you changed from the pre-filled default is kept.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {pendingChoice && (
+        <AlertModal
+          title="Change industry?"
+          message={`Changing your industry to ${pendingChoice.displayName} will replace the pre-filled examples with ones tailored to that industry. Your committed changes will be kept.`}
+          cancelLabel="Cancel"
+          confirmLabel="Change industry"
+          onCancel={cancel}
+          onConfirm={confirmChange}
+          destructive={false}
+        />
+      )}
+    </PhoneFrame>
+  );
+}
+
+function App() {
+  return (
+    <>
+      <ScreenNav current="04-change-industry-confirm.html" />
+      <ChangeIndustryScreen />
+      <div style={{
+        textAlign: 'center', marginTop: 16, fontSize: 12,
+        color: 'var(--secondary-text)', maxWidth: 420,
+      }}>
+        Tap <em>Change Industry (demo)</em> to trigger the confirmation alert.<br/>
+        URL params: <code>?industry=&lt;current&gt;&amp;target=&lt;new&gt;</code>
+      </div>
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+/* ─────────────────────────────────────────────────────────────
+ * YouSquared Design Tokens
+ * Mirror of Theme.swift + Color+Ext.swift (iOS app).
+ * When in doubt, the Swift files are the source of truth.
+ * ───────────────────────────────────────────────────────────── */
+
+:root {
+  /* ── Text ───────────────────────────────────────────────── */
+  --primary-text: #2D2A26;
+  --secondary-text: #6B6560;
+  --tertiary-text: #9E9892;
+
+  /* ── Backgrounds & surfaces ─────────────────────────────── */
+  --bg: #FFFFFF;
+  --bg-primary: #F5F2EF;
+  --surface-light: #F5F2EF;
+  --surface-dark: #F8F6F4;
+  --surface-darken: #F0EDEA;
+  --surface-black: #1A1A1A;
+
+  /* ── Accent (YouSquared coral) ──────────────────────────── */
+  --accent: #FF8370;
+  --accent-dark: #E0634F;
+  --accent-surface: #FFF5F3;
+
+  /* ── Inputs ─────────────────────────────────────────────── */
+  --input-bg: #FAF9F7;
+  --input-fill: #F5F2EF;
+  --input-stroke: #E8E4E0;
+
+  /* ── State ──────────────────────────────────────────────── */
+  --error: #E53935;
+  --red-50: #FFEBEE;
+  --red-100: #FFCDD2;
+  --green-500: #43A047;
+  --green-50: #E8F5E9;
+  --gold: #FFB300;
+  --border: #E8E4E0;
+
+  /* ── Icons ──────────────────────────────────────────────── */
+  --icon-primary: #6B6560;
+
+  /* ── Spacing (from Theme.swift) ─────────────────────────── */
+  --sp-xs: 4px;
+  --sp-sm: 10px;
+  --sp-normal: 16px;
+  --sp-md: 20px;
+  --sp-lg: 30px;
+  --sp-xl: 40px;
+
+  /* ── Radius (from Theme.swift) ──────────────────────────── */
+  --r-sm: 8px;
+  --r: 10px;
+  --r-lg: 12px;
+  --r-xl: 18px;
+  --r-xxl: 30px;
+
+  /* ── Fixed sizes (from Theme.swift) ─────────────────────── */
+  --cell-h: 56px;
+  --btn-h: 48px;
+  --btn-sm-h: 36px;
+  --tap-min: 44px;
+
+  /* ── Typography ─────────────────────────────────────────── */
+  --font-family: -apple-system, 'SF Pro Text', 'SF Pro Display', system-ui, sans-serif;
+}
+
+/* ── Global resets ────────────────────────────────────────── */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font-family);
+  background: #E8E4E0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 24px 16px;
+  color: var(--primary-text);
+}
+
+/* ── Typography utility classes (mirror Theme.swift modifiers) ── */
+.title1-s    { font-size: 32px; font-weight: 600; letter-spacing: 0.36px; line-height: 1.2; }
+.title2-m    { font-size: 28px; font-weight: 500; letter-spacing: 0.35px; line-height: 1.25; }
+.title3-s    { font-size: 22px; font-weight: 600; letter-spacing: 0.38px; line-height: 1.3; }
+.title3-m    { font-size: 22px; font-weight: 500; letter-spacing: 0.38px; line-height: 1.3; }
+.headline-m  { font-size: 17px; font-weight: 500; line-height: 1.4; }
+.body-s      { font-size: 17px; font-weight: 600; line-height: 1.4; }
+.body-r      { font-size: 17px; font-weight: 400; line-height: 1.4; }
+.subheadline-r { font-size: 15px; font-weight: 400; line-height: 1.4; }
+.footnote-m  { font-size: 13px; font-weight: 500; line-height: 1.35; }
+.footnote-s  { font-size: 13px; font-weight: 600; line-height: 1.35; }
+.footnote-r  { font-size: 13px; font-weight: 400; line-height: 1.35; }
+.footnote-ru { font-size: 13px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; line-height: 1.35; }
+.caption-r   { font-size: 12px; font-weight: 400; line-height: 1.3; }
+
+/* ── Common text colors ───────────────────────────────────── */
+.text-primary   { color: var(--primary-text); }
+.text-secondary { color: var(--secondary-text); }
+.text-tertiary  { color: var(--tertiary-text); }
+.text-accent    { color: var(--accent); }
+.text-error     { color: var(--error); }
+.text-green     { color: var(--green-500); }
+
+/* ── Buttons (mirror .primaryButton / .secondaryButton / .tertiaryButton) ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: var(--btn-h);
+  padding: 0 var(--sp-md);
+  border-radius: var(--r-xxl);
+  border: none;
+  font-family: var(--font-family);
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+.btn:hover { opacity: 0.9; }
+.btn:disabled { opacity: 0.4; cursor: default; }
+
+.btn-primary   { background: var(--accent); color: #FFFFFF; }
+.btn-secondary { background: var(--surface-darken); color: var(--primary-text); }
+.btn-tertiary  { background: transparent; color: var(--primary-text); border: 1px solid var(--border); }
+.btn-destructive { background: var(--error); color: #FFFFFF; }
+.btn-sm        { height: var(--btn-sm-h); font-size: 15px; padding: 0 var(--sp-normal); }
+.btn-full      { width: 100%; }
+
+/* ── Badge variants (from industry prototype) ─────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.badge-preset { background: var(--green-50); color: #2E7D32; }
+.badge-draft  { background: #FFF3E0;         color: #E65100; }
+.badge-tag    { background: var(--surface-light); color: var(--secondary-text); font-weight: 500; }
