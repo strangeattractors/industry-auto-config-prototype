@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Industry Auto-Config Prototype — YouSquared</title>
+<link rel="stylesheet" href="shared/theme.css" />
+<style>
+  body {
+    background: var(--bg-primary);
+    padding: 60px 24px;
+    align-items: stretch;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 32px; font-weight: 600; color: var(--primary-text); margin-bottom: 8px; }
+  .sub { font-size: 17px; color: var(--secondary-text); margin-bottom: 32px; line-height: 1.5; }
+  h2 { font-size: 20px; font-weight: 600; color: var(--primary-text); margin: 32px 0 12px; }
+  .screens { display: grid; grid-template-columns: 1fr; gap: 10px; }
+  .screen-link {
+    display: flex; align-items: center; gap: 16px;
+    padding: 16px 20px; background: var(--bg);
+    border: 1px solid var(--border); border-radius: var(--r-lg);
+    text-decoration: none; color: var(--primary-text);
+    transition: all 0.15s ease;
+  }
+  .screen-link:hover {
+    border-color: var(--accent);
+    transform: translateX(2px);
+    box-shadow: 0 4px 12px rgba(255,131,112,0.1);
+  }
+  .screen-num {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--accent); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 600; font-size: 15px; flex-shrink: 0;
+  }
+  .screen-meta { flex: 1; }
+  .screen-title { font-size: 17px; font-weight: 600; margin-bottom: 2px; }
+  .screen-desc { font-size: 14px; color: var(--secondary-text); }
+  .arrow { color: var(--tertiary-text); font-size: 20px; }
+
+  .industries {
+    display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 8px;
+  }
+  .industry-pill {
+    padding: 8px 14px; border-radius: var(--r-xxl);
+    border: 1.5px solid var(--border); background: var(--bg);
+    font-size: 14px; color: var(--primary-text);
+    text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+    transition: border-color 0.15s;
+  }
+  .industry-pill:hover { border-color: var(--accent); }
+
+  .note {
+    background: var(--surface-light); padding: 16px 20px;
+    border-radius: var(--r-lg); font-size: 14px; color: var(--secondary-text);
+    line-height: 1.5; margin-top: 16px;
+  }
+  code {
+    background: var(--surface-darken); padding: 2px 6px;
+    border-radius: 4px; font-size: 13px;
+    font-family: 'SF Mono', Menlo, Consolas, monospace;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Industry Auto-Config Prototype</h1>
+  <p class="sub">
+    High-fidelity web mock of the YouSquared iOS flow where users pick an industry
+    and the app pre-fills their Company Info screen with industry-tailored defaults.
+    Mirrors the Swift implementation on <code>tomohiro/industry-auto-config</code>.
+  </p>
+
+  <div class="note" style="background:#FFF5F3;border:1px solid #FFD4CC;margin-bottom:24px;">
+    <strong>📦 Archived version</strong> — Apr 16, 2026 multi-screen prototype.<br/>
+    The current version lives at <a href="../../" style="color:var(--accent);">the root overview</a>.
+  </div>
+
+  <h2>Happy path</h2>
+  <div class="screens">
+    <a class="screen-link" href="01-industry-picker.html">
+      <span class="screen-num">1</span>
+      <div class="screen-meta">
+        <div class="screen-title">Industry picker</div>
+        <div class="screen-desc">Two-level list · parent → sub-industry · search + "Other, specify"</div>
+      </div>
+      <span class="arrow">›</span>
+    </a>
+    <a class="screen-link" href="02-prefill-animation.html?industry=pharmacy">
+      <span class="screen-num">2</span>
+      <div class="screen-meta">
+        <div class="screen-title">Pre-fill animation</div>
+        <div class="screen-desc">Sparkle + progress + ticker · auto-advances in ~2.4s</div>
+      </div>
+      <span class="arrow">›</span>
+    </a>
+    <a class="screen-link" href="03-company-info.html?industry=pharmacy">
+      <span class="screen-num">3</span>
+      <div class="screen-meta">
+        <div class="screen-title">Company Info review</div>
+        <div class="screen-desc">Pre-filled fields with green/orange badges · industry-specific sections</div>
+      </div>
+      <span class="arrow">›</span>
+    </a>
+    <a class="screen-link" href="04-change-industry-confirm.html?industry=pharmacy">
+      <span class="screen-num">4</span>
+      <div class="screen-meta">
+        <div class="screen-title">Change industry confirmation</div>
+        <div class="screen-desc">Alert modal · preserves user edits, replaces presets</div>
+      </div>
+      <span class="arrow">›</span>
+    </a>
+    <a class="screen-link" href="05-edit-bio.html?industry=pharmacy">
+      <span class="screen-num">5</span>
+      <div class="screen-meta">
+        <div class="screen-title">Edit work bio</div>
+        <div class="screen-desc">Preset → edited state machine · reset-to-preset escape hatch</div>
+      </div>
+      <span class="arrow">›</span>
+    </a>
+  </div>
+
+  <h2>Try an industry</h2>
+  <p class="sub" style="margin-bottom:0;font-size:15px;">
+    Jump straight to the Company Info screen for each:
+  </p>
+  <div class="industries">
+    <a class="industry-pill" href="03-company-info.html?industry=pharmacy">💊 Pharmacy</a>
+    <a class="industry-pill" href="03-company-info.html?industry=dental">🦷 Dental</a>
+    <a class="industry-pill" href="03-company-info.html?industry=residential">🏡 Residential Real Estate</a>
+    <a class="industry-pill" href="03-company-info.html?industry=equipment-rental">🚜 Equipment Rental</a>
+    <a class="industry-pill" href="03-company-info.html?industry=medical">⚕️ Medical (fallback demo)</a>
+  </div>
+
+  <h2>For contributors</h2>
+  <div class="note">
+    <strong>Run locally:</strong> <code>python3 -m http.server 8000</code> from this directory,
+    then open <code>http://localhost:8000</code>. A static server is required because browsers
+    block loading local JS files over <code>file://</code>.<br/><br/>
+    <strong>Add an industry:</strong> drop an entry in <code>shared/industries.js</code>
+    (<code>INDUSTRY_TREE</code> for the picker + <code>INDUSTRY_PREFILLS</code> for the
+    defaults). See <code>README.md</code>.<br/><br/>
+    <strong>Structure:</strong> each screen is a self-contained HTML file &lt;400 lines.
+    Shared design tokens, iPhone chrome, and React components live in <code>shared/</code>.
+  </div>
+</div>
+</body>
+</html>
